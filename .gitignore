@@ -1,0 +1,2 @@
+# AVOID PUSH ENV FILES
+.env*
