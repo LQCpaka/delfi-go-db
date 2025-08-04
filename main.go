@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"delfi-scanner-api/db"
-
+	"delfi-scanner-api/models"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 )
@@ -62,10 +62,13 @@ func setupRouter() {
 	// Connect to the database
 	db.ConnectDatabase()
 
-	// Create gin router
-	r := gin.Default()
+	log.Println("Running Migration...")
+	err = db.DB.AutoMigrate(&models.Product{}, &models.Ticket{})
+	if err != nil {
+		log.Fatalf("Migration failed: %v", err)
+	}
 
-	r.Run(":8080")
+	r := gin.Default()
 }
 
 func main() {

@@ -6,10 +6,11 @@ import (
 	"log"
 	"os"
 
-	"github.com/jackc/pgx/v5"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
-var Conn *pgx.Conn
+var DB *gorm.DB
 
 func ConnectDatabase() {
 	var err error
@@ -22,7 +23,7 @@ func ConnectDatabase() {
 
 	// Connect to database
 
-	Conn, err = pgx.Connect(context.Background(), dbURL)
+	DB, err = gorm.Open(postgres.Open(dbURL), &gorm.Config{})
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
 		os.Exit(1)
