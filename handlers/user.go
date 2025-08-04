@@ -1,9 +1,7 @@
 package handlers
 
 import (
-	"log"
 	"net/http"
-	"os"
 	"time"
 
 	"delfi-scanner-api/config"
@@ -20,6 +18,8 @@ var jwtKey = config.Get().JWTKey
 func SignUp(c *gin.Context) {
 	var user models.User
 	if err := c.ShouldBindJSON(&user); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request data"})
+		return
 	}
 
 	// Hashmap passsword
