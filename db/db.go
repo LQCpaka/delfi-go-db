@@ -1,7 +1,6 @@
 package db
 
 import (
-	"context"
 	"fmt"
 	"log"
 	"os"
@@ -15,6 +14,7 @@ var DB *gorm.DB
 func ConnectDatabase() {
 	var err error
 
+	// DbURL from environment variable
 	dbURL := os.Getenv("DB_URL")
 
 	if dbURL == "" {
@@ -22,7 +22,6 @@ func ConnectDatabase() {
 	}
 
 	// Connect to database
-
 	DB, err = gorm.Open(postgres.Open(dbURL), &gorm.Config{})
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
