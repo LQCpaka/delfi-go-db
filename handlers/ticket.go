@@ -28,7 +28,7 @@ func CreateTicket(c *gin.Context) {
 	c.JSON(http.StatusOK, ticket)
 }
 
-func GetTicket(c *gin.Context) {
+func GetTickets(c *gin.Context) {
 	var tickets []models.Ticket
 
 	if result := db.DB.Find(&tickets); result.Error != nil {

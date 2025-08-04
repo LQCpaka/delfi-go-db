@@ -23,6 +23,7 @@ func SignUp(c *gin.Context) {
 	}
 
 	// Hashmap passsword
+
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to hash password"})
@@ -62,20 +63,23 @@ func SignIn(c *gin.Context) {
 	// Compare passwords
 	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(creds.Password)); err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid Password"})
+		return
 	}
 
 	// Create JWT token
-	expirationnTime := time.Now().Add(24 * time.Hour)
+
+	expirationTime := time.Now().Add(24 * time.Hour)
 	claims := &jwt.RegisteredClaims{
 		Subject:   user.Email,
-		ExpiresAt: jwt.NewNumericDate(expirationnTime),
+		ExpiresAt: jwt.NewNumericDate(expirationTime),
 	}
 
-	token := jwt.NewWithClaims(jwt.SigningMethodES256, claims)
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	tokenString, err := token.SignedString(jwtKey)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create token"})
+		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"Token": tokenString})
+	c.JSON(http.StatusOK, gin.H{"token": tokenString})
 }
